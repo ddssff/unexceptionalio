@@ -85,7 +85,7 @@ data ProgrammerError =
 	ArithException Ex.ArithException     |
 	ArrayException Ex.ArrayException     |
 	AssertionFailed Ex.AssertionFailed   |
-	ErrorCall Ex.ErrorCall               |
+	-- ErrorCall Ex.ErrorCall               |
 	NestedAtomically Ex.NestedAtomically |
 	NoMethodError Ex.NoMethodError       |
 	PatternMatchFail Ex.PatternMatchFail |
@@ -101,7 +101,7 @@ instance Ex.Exception ProgrammerError where
 	toException (ArithException e)      = Ex.toException e
 	toException (ArrayException e)      = Ex.toException e
 	toException (AssertionFailed e)     = Ex.toException e
-	toException (ErrorCall e)           = Ex.toException e
+	-- toException (ErrorCall e)           = Ex.toException e
 	toException (NestedAtomically e)    = Ex.toException e
 	toException (NoMethodError e)       = Ex.toException e
 	toException (PatternMatchFail e)    = Ex.toException e
@@ -116,7 +116,7 @@ instance Ex.Exception ProgrammerError where
 		ArithException   <$> Ex.fromException e <|>
 		ArrayException   <$> Ex.fromException e <|>
 		AssertionFailed  <$> Ex.fromException e <|>
-		ErrorCall        <$> Ex.fromException e <|>
+		-- ErrorCall        <$> Ex.fromException e <|>
 		NestedAtomically <$> Ex.fromException e <|>
 		NoMethodError    <$> Ex.fromException e <|>
 		PatternMatchFail <$> Ex.fromException e <|>
