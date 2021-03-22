@@ -60,6 +60,9 @@ assertChildThreadError e = case Ex.fromException e of
 	Nothing -> assertFailure $ "Expected ChildThreadError got " ++ show e
 #endif
 
+someCaughtError :: Monad m => m ()
+someCaughtError = Ex.assert False (return ())
+
 tests :: [Test]
 tests =
 	[
@@ -82,22 +85,22 @@ tests =
 				(assertLeft ((@?= Just ExitSuccess) . Ex.fromException))
 			),
 			testCase "wraps sync PseudoException in ChildThreadError" (threadReturns
-				(void $ UIO.fork (error "blah"))
+				(void $ UIO.fork someCaughtError)
 				(assertLeft assertChildThreadError)
 			)
 		],
 #endif
-		testGroup "fromIO catches runtime errors" [
+		testGroup "fromIO catches runtime errors and ErrorCall" [
 			testCase "fail" (fromIOCatches $ fail "boo"),
 			testCase "userError" (fromIOCatches $ Ex.throwIO $ userError "boo"),
-			testCase "CustomException" (fromIOCatches $ Ex.throwIO CustomException)
+			testCase "CustomException" (fromIOCatches $ Ex.throwIO CustomException),
+			testCase "error" (fromIOCatches $ error "boo"),
+			testCase "undefined" (fromIOCatches undefined)
 		],
 		testGroup "fromIO passes through programmer errors" [
 #if MIN_VERSION_base(4,9,0)
 			testCase "TypeError" (fromIOPasses $ Ex.throwIO $ Ex.TypeError "boo"),
 #endif
-			testCase "error" (fromIOPasses $ error "boo"),
-			testCase "undefined" (fromIOPasses undefined),
 			testCase "ArithException" (fromIOPasses $ void (return $! (1::Int) `div` 0)),
 			testCase "assert" (fromIOPasses $ Ex.assert False (return ())),
 			testCase "pattern match fail" (fromIOPasses $ (\(Just _) -> return ()) Nothing),
