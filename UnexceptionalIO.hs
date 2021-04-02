@@ -82,7 +82,7 @@ data ProgrammerError =
 #if MIN_VERSION_base(4,9,0)
 	TypeError Ex.TypeError               |
 #endif
-	ArithException Ex.ArithException     |
+	-- ArithException Ex.ArithException     |
 	ArrayException Ex.ArrayException     |
 	AssertionFailed Ex.AssertionFailed   |
 	-- ErrorCall Ex.ErrorCall               |
@@ -98,7 +98,7 @@ instance Ex.Exception ProgrammerError where
 #if MIN_VERSION_base(4,9,0)
 	toException (TypeError e)           = Ex.toException e
 #endif
-	toException (ArithException e)      = Ex.toException e
+	-- toException (ArithException e)      = Ex.toException e
 	toException (ArrayException e)      = Ex.toException e
 	toException (AssertionFailed e)     = Ex.toException e
 	-- toException (ErrorCall e)           = Ex.toException e
@@ -113,7 +113,7 @@ instance Ex.Exception ProgrammerError where
 #if MIN_VERSION_base(4,9,0)
 		TypeError        <$> Ex.fromException e <|>
 #endif
-		ArithException   <$> Ex.fromException e <|>
+		-- ArithException   <$> Ex.fromException e <|>
 		ArrayException   <$> Ex.fromException e <|>
 		AssertionFailed  <$> Ex.fromException e <|>
 		-- ErrorCall        <$> Ex.fromException e <|>

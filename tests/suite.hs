@@ -95,13 +95,13 @@ tests =
 			testCase "userError" (fromIOCatches $ Ex.throwIO $ userError "boo"),
 			testCase "CustomException" (fromIOCatches $ Ex.throwIO CustomException),
 			testCase "error" (fromIOCatches $ error "boo"),
-			testCase "undefined" (fromIOCatches undefined)
+			testCase "undefined" (fromIOCatches undefined),
+			testCase "ArithException" (fromIOCatches $ void (return $! (1::Int) `div` 0))
 		],
 		testGroup "fromIO passes through programmer errors" [
 #if MIN_VERSION_base(4,9,0)
 			testCase "TypeError" (fromIOPasses $ Ex.throwIO $ Ex.TypeError "boo"),
 #endif
-			testCase "ArithException" (fromIOPasses $ void (return $! (1::Int) `div` 0)),
 			testCase "assert" (fromIOPasses $ Ex.assert False (return ())),
 			testCase "pattern match fail" (fromIOPasses $ (\(Just _) -> return ()) Nothing),
 			testCase "array out of bounds" (fromIOPasses $ Ex.throwIO $ Ex.IndexOutOfBounds "boo"),
@@ -123,7 +123,7 @@ tests =
 			testCase "AllocationLimitExceeded" (fromIOPasses $ Ex.throwIO Ex.AllocationLimitExceeded),
 #endif
 #if MIN_VERSION_base(4,7,0)
-			testCase "ChildThreadError" (fromIOPasses $ Ex.throwIO $ UIO.ChildThreadError $ UIO.ProgrammerError $ UIO.ArithException Ex.DivideByZero),
+			testCase "ChildThreadError" (fromIOPasses $ Ex.throwIO $ UIO.ChildThreadError $ UIO.ProgrammerError $ UIO.AssertionFailed (Ex.AssertionFailed "some assertion")),
 #endif
 			testCase "NonTermination" (fromIOPasses $ Ex.throwIO Ex.NonTermination),
 			testCase "StackOverflow" (fromIOPasses $ Ex.throwIO Ex.StackOverflow),
